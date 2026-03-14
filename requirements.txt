@@ -1,0 +1,33 @@
+# Core ML/NLP
+torch>=2.0.0
+transformers>=4.35.0
+FlagEmbedding>=1.2.0
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Vector Database
+weaviate-client>=4.5.0
+
+# LLM APIs
+openai>=1.3.0
+dashscope>=1.14.0
+
+# PDF Processing
+magic-pdf>=0.6.0
+
+# Text Processing
+jieba>=0.42.1
+pypinyin>=0.47.0
+
+# Utilities
+python-dotenv>=1.0.0
+tenacity>=8.2.0
+tqdm>=4.66.0
+pydantic>=2.5.0
+
+# Monitoring
+loguru>=0.7.0
+
+# Development
+pytest>=7.4.0
+black>=23.0.0

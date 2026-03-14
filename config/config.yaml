@@ -1,0 +1,65 @@
+# 中文RAG系统配置
+
+# PDF解析配置
+pdf_parser:
+  library: "mineru"  # 使用MinerU
+  device: "cuda:0"   # 4090 GPU
+  table_format: "markdown"  # 表格输出格式
+  lang: "ch"         # 中文模式
+
+# 向量化配置
+embedding:
+  model_name: "BAAI/bge-m3"
+  device: "cuda:0"
+  normalize_embeddings: true
+  max_length: 8192
+
+# 向量数据库配置
+vector_store:
+  provider: "weaviate"
+  host: "localhost"
+  port: 8080
+  grpc_port: 50051
+  collection_name: "ChineseDocuments"
+  initial_alpha: 0.5  # 混合检索初始权重
+  distance_metric: "cosine"
+
+# 检索配置
+retrieval:
+  top_k: 10
+  rerank_top_n: 5
+  enable_parent_retrieval: true
+  parent_context_ratio: 0.3  # 父文档上下文权重
+
+# 重排序配置
+reranker:
+  provider: "qwen-turbo"
+  api_key: ""  # 从环境变量获取
+  model: "qwen-turbo"
+  temperature: 0.1
+  max_tokens: 1000
+
+# 自动调节配置
+auto_tuner:
+  window_size: 10
+  variance_threshold_high: 0.3
+  variance_threshold_low: 0.1
+  min_alpha: 0.2
+  max_alpha: 0.8
+  adjust_cooldown: 5  # 冷却期
+
+# GPU配置
+gpu:
+  device: "cuda:0"
+  memory_fraction: 0.8
+  batch_size:
+    embedding: 32
+    mineru: 1
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name} | {message}"
+  file: "logs/chinese_rag.log“
+
+现在我开始实现核心组件。首先创建项目结构：
