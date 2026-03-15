@@ -1,21 +1,22 @@
 # 中文RAG系统
 
-基于MinerU、BGE-M3、Weaviate和Qwen-turbo的中文文档问答系统
+基于MinerU、BGE-M3、Milvus Lite和Qwen-turbo的中文文档问答系统
 
 ## 🎯 系统特点
 
 - **中文优化**: 专为中文PDF文档设计，支持中文语义理解
 - **父子文档**: 基于MinerU JSON输出的精确父子文档关系
-- **混合检索**: Weaviate内置混合检索，支持自动alpha调节
+- **向量检索**: Milvus Lite本地向量存储，无需Docker
 - **智能重排**: Qwen-turbo重排序，提升检索质量
 - **稳定可靠**: 完善的错误处理和降级机制
+- **零Docker依赖**: 纯Python环境，一键部署到AutoDL等平台
 
 ## 🏗️ 系统架构
 
 ```
-PDF文档 → MinerU解析 → 父子文档结构 → BGE-M3向量化 → Weaviate存储
-    ↑                                                        ↓
-用户查询 ← 答案生成 ← Qwen重排序 ← 父文档检索 ← 混合检索
+PDF文档 → MinerU解析 → 父子文档结构 → BGE-M3向量化 → Milvus存储
+    ↑                                                      ↓
+用户查询 ← 答案生成 ← Qwen重排序 ← 父文档检索 ← 向量检索
 ```
 
 ## 📦 安装
@@ -48,24 +49,14 @@ pip install -e .
 cd ..
 ```
 
-### 5. 启动Weaviate
-```bash
-docker run -d --name weaviate \
-  -p 8080:8080 \
-  -p 50051:50051 \
-  -e AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true \
-  -e PERSISTENCE_DATA_PATH="/var/lib/weaviate" \
-  semitechnologies/weaviate:latest
-```
-
-### 6. 配置环境变量
+### 5. 配置环境变量
 创建 `.env` 文件：
 ```bash
-# API密钥
+# API密钥（必填）
 DASHSCOPE_API_KEY=your_dashscope_api_key
 
-# Weaviate连接（可选）
-WEAVIATE_URL=localhost:8080
+# Milvus数据路径（可选，默认./milvus_data/milvus.db）
+MILVUS_DB_PATH=./milvus_data/milvus.db
 
 # GPU配置（可选）
 CUDA_VISIBLE_DEVICES=0
@@ -118,8 +109,10 @@ embedding:
 
 # 向量数据库
 vector_store:
+  provider: "milvus_lite"
+  db_path: "./milvus_data/milvus.db"  # 本地存储路径
   collection_name: "ChineseDocuments"
-  initial_alpha: 0.5  # 混合检索权重
+  dim: 1024  # BGE-M3向量维度
 
 # 自动调节
 auto_tuner:
@@ -140,7 +133,7 @@ reranker:
 - 父文档LRU缓存
 
 ### 检索优化
-- 混合检索alpha自动调节
+- ~~混合检索alpha自动调节~~（当前版本为纯向量检索）
 - 父文档上下文增强
 - 智能重排序
 
@@ -158,7 +151,7 @@ chinese_rag/
 │   ├── config.py          # 配置管理
 │   ├── pdf_parser_mineru.py  # PDF解析
 │   ├── embedding_bge.py   # 向量化
-│   ├── vector_store_weaviate.py  # 向量存储
+│   ├── vector_store_milvus.py  # 向量存储（Milvus Lite）
 │   ├── auto_tuner.py      # 自动调节
 │   ├── reranker_qwen.py   # 重排序
 │   ├── parent_document_retriever.py  # 父文档检索
@@ -167,6 +160,7 @@ chinese_rag/
 ├── tests/                 # 测试
 ├── logs/                  # 日志
 ├── data/                  # 数据
+├── milvus_data/           # Milvus本地数据（自动创建）
 └── main.py               # 主入口
 ```
 
@@ -214,7 +208,7 @@ MIT License
 
 - [MinerU](https://github.com/opendatalab/MinerU) - PDF解析
 - [BAAI/bge-m3](https://huggingface.co/BAAI/bge-m3) - 向量化模型
-- [Weaviate](https://weaviate.io/) - 向量数据库
+- [Milvus](https://milvus.io/) - 向量数据库（Lite版）
 - [DashScope](https://dashscope.aliyun.com/) - Qwen-turbo API
 
 ## 📞 支持

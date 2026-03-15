@@ -28,12 +28,9 @@ class Config:
         if os.getenv("DASHSCOPE_API_KEY"):
             self._config["reranker"]["api_key"] = os.getenv("DASHSCOPE_API_KEY")
 
-        if os.getenv("WEAVIATE_URL"):
-            url = os.getenv("WEAVIATE_URL")
-            if ":" in url:
-                host, port = url.split(":")
-                self._config["vector_store"]["host"] = host
-                self._config["vector_store"]["port"] = int(port)
+        # Milvus 配置（如果有环境变量）
+        if os.getenv("MILVUS_DB_PATH"):
+            self._config["vector_store"]["db_path"] = os.getenv("MILVUS_DB_PATH")
 
     def get(self, key_path: str, default=None) -> Any:
         """获取配置值，支持点分隔路径"""

@@ -152,7 +152,7 @@ def run_tests():
     # 运行各个模块的测试
     from src.pdf_parser_mineru import test_pdf_parser
     from src.embedding_bge import test_embedding
-    from src.vector_store_weaviate import test_vector_store
+    from src.vector_store_milvus import test_vector_store
     from src.auto_tuner import test_auto_tuner
     from src.reranker_qwen import test_reranker
     from src.parent_document_retriever import test_parent_document_retriever

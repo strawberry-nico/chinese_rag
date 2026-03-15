@@ -16,12 +16,11 @@ embedding:
 
 # 向量数据库配置
 vector_store:
-  provider: "weaviate"
-  host: "localhost"
-  port: 8080
-  grpc_port: 50051
+  provider: "milvus_lite"
+  db_path: "./milvus_data/milvus.db"
   collection_name: "ChineseDocuments"
-  initial_alpha: 0.5  # 混合检索初始权重
+  dim: 1024  # BGE-M3 向量维度
+  initial_alpha: 0.5  # 混合检索初始权重（当前版本仅记录）
   distance_metric: "cosine"
 
 # 检索配置

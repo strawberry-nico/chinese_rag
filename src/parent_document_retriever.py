@@ -148,11 +148,13 @@ class ParentDocumentRetriever:
         return None
 
     def _search_by_field(self, field: str, value: str) -> List[Dict[str, Any]]:
-        """按字段搜索（简化实现）"""
-        # 这里应该使用Weaviate的过滤查询
-        # 由于接口限制，这里返回空列表
-        # 在实际实现中，应该调用 vector_store.search_by_field
-        return []
+        """按字段搜索"""
+        # 调用 vector_store 的 search_by_field 方法
+        if hasattr(self.vector_store, 'search_by_field'):
+            return self.vector_store.search_by_field(field, value)
+        else:
+            logger.warning(f"vector_store 不支持 search_by_field 方法")
+            return []
 
     def _search_parent_documents_directly(self, query: str, query_embedding: List[float],
                                         limit: int) -> List[Dict[str, Any]]:

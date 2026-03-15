@@ -11,7 +11,7 @@ from datetime import datetime
 from src.config import config
 from src.pdf_parser_mineru import MinerUPDFParser, ParsedDocument
 from src.embedding_bge import BGEM3Embedding
-from src.vector_store_weaviate import WeaviateHybridStore
+from src.vector_store_milvus import MilvusVectorStore
 from src.auto_tuner import HybridSearchAutoTuner
 from src.reranker_qwen import QwenTurboReranker
 from src.parent_document_retriever import ParentDocumentRetriever
@@ -78,12 +78,10 @@ class ChineseRAGPipeline:
         self.logger.info("✓ 向量化模型初始化完成")
 
         # 3. 向量数据库
-        self.vector_store = WeaviateHybridStore(
+        self.vector_store = MilvusVectorStore(
             collection_name=self.config['vector_store']['collection_name'],
-            alpha=self.config['vector_store']['initial_alpha'],
-            host=self.config['vector_store']['host'],
-            port=self.config['vector_store']['port'],
-            grpc_port=self.config['vector_store']['grpc_port']
+            db_path=self.config['vector_store']['db_path'],
+            dim=self.config['vector_store'].get('dim', 1024)
         )
         self.logger.info("✓ 向量数据库初始化完成")
 
