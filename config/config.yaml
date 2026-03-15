@@ -60,5 +60,3 @@ logging:
   level: "INFO"
   format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name} | {message}"
   file: "logs/chinese_rag.log“
-
-现在我开始实现核心组件。首先创建项目结构：

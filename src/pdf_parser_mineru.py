@@ -361,4 +361,4 @@ def test_pdf_parser():
     return result
 
 if __name__ == "__main__":
-    test_pdf_parser()""""file_path":"/Users/nico/Downloads/8-项目实战：企业知识库/RAG-Challenge-2-main/chinese_rag/src/pdf_parser_mineru.py"}''}''
+    test_pdf_parser()
