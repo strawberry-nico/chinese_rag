@@ -59,4 +59,4 @@ gpu:
 logging:
   level: "INFO"
   format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name} | {message}"
-  file: "logs/chinese_rag.log“
+  file: "logs/chinese_rag.log"
