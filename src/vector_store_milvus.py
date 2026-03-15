@@ -87,7 +87,7 @@ class MilvusVectorStore:
             # 注意：添加 doc_id 字段用于存储原始 chunk id，便于父文档检索
             fields = [
                 FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
-                FieldSchema(name="doc_id", dtype=DataType.VARCHAR, max_length=128),  # 原始 chunk id
+                FieldSchema(name="doc_id", dtype=DataType.VARCHAR, max_length=256),  # 原始 chunk id
                 FieldSchema(name="content", dtype=DataType.VARCHAR, max_length=65535),
                 FieldSchema(name="content_type", dtype=DataType.VARCHAR, max_length=64),
                 FieldSchema(name="doc_type", dtype=DataType.VARCHAR, max_length=64),
@@ -133,8 +133,12 @@ class MilvusVectorStore:
             # 准备数据
             entities = []
             for chunk, embedding in zip(chunks, embeddings):
-                # 生成 doc_id（如果 chunk 没有 id）
+                # 生成 doc_id（如果 chunk 没有 id），截断到250字符避免超长
                 doc_id = chunk.get("id", f"{chunk['metadata']['source']}_{chunk['page_no']}_{chunk['type']}")
+                if len(doc_id) > 250:
+                    import hashlib
+                    doc_hash = hashlib.md5(doc_id.encode()).hexdigest()[:16]
+                    doc_id = doc_id[:230] + "_" + doc_hash  # 保留部分原文+哈希
 
                 entities.append({
                     "doc_id": doc_id,
@@ -142,8 +146,8 @@ class MilvusVectorStore:
                     "content_type": chunk["type"],
                     "doc_type": "parent" if chunk["type"] == "parent" else "child",
                     "page_no": chunk["page_no"],
-                    "source": chunk["metadata"]["source"],
-                    "parent_id": chunk["metadata"].get("parent_id", ""),
+                    "source": chunk["metadata"]["source"][:500],  # 截断避免超长
+                    "parent_id": chunk["metadata"].get("parent_id", "")[:250],  # 截断避免超长
                     "child_count": chunk["metadata"].get("child_count", 0),
                     "embedding": embedding
                 })
