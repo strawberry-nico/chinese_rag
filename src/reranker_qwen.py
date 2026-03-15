@@ -317,4 +317,4 @@ def test_reranker():
     return reranked_docs
 
 if __name__ == "__main__":
-    test_reranker()"
+    test_reranker()
