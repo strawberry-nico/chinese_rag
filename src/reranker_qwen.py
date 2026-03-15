@@ -9,6 +9,12 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger(__name__)
 
+# 重试配置（模块级别，供装饰器使用）
+retry_config = {
+    "stop": stop_after_attempt(3),
+    "wait": wait_exponential(multiplier=1, min=4, max=10)
+}
+
 class QwenTurboReranker:
     """Qwen-turbo重排序器"""
 
@@ -22,12 +28,6 @@ class QwenTurboReranker:
             self.use_mock = True
         else:
             self.use_mock = False
-
-        # 重试配置
-        self.retry_config = {
-            "stop": stop_after_attempt(3),
-            "wait": wait_exponential(multiplier=1, min=4, max=10)
-        }
 
     @retry(**retry_config)
     def rerank(self, query: str, documents: List[Dict[str, Any]], top_n: int = 5) -> List[Dict[str, Any]]:
