@@ -93,7 +93,7 @@ class MilvusVectorStore:
                 FieldSchema(name="doc_type", dtype=DataType.VARCHAR, max_length=64),
                 FieldSchema(name="page_no", dtype=DataType.INT64),
                 FieldSchema(name="source", dtype=DataType.VARCHAR, max_length=512),
-                FieldSchema(name="parent_id", dtype=DataType.VARCHAR, max_length=128),
+                FieldSchema(name="parent_id", dtype=DataType.VARCHAR, max_length=256),
                 FieldSchema(name="child_count", dtype=DataType.INT64),
                 FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=self.dim)
             ]
