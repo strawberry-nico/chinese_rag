@@ -166,4 +166,4 @@ def test_embedding():
     return embeddings
 
 if __name__ == "__main__":
-    test_embedding()""""file_path":"/Users/nico/Downloads/8-项目实战：企业知识库/RAG-Challenge-2-main/chinese_rag/src/embedding_bge.py"}''}''
+    test_embedding()
